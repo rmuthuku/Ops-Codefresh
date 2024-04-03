@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: df-tms-qa
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: /manifests/df-tms-app/df-qa
+    codefresh.io/product: df-tms
+    codefresh.io/app-group: tms
+spec:
+  destination:
+    name: 'in-cluster'
+    namespace: dev
+  source:
+    path: manifests/df-tms-app/df-qa
+    repoURL: 'https://github.com/rmuthuku/Ops-Codefresh.git'
+    targetRevision: main
+    # plugin:
+    #   name: kustomize-build-with-helm
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      # - ServerSideApply=true
